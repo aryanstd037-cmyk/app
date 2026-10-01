@@ -311,7 +311,23 @@ function initSearchPlaceholder() {
   }, 2500);
 }
 
+/* ---------------- Mobile drawer ---------------- */
+function initDrawer() {
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('drawerOverlay');
+  const toggle = (open) => {
+    drawer.classList.toggle('open', open);
+    overlay.classList.toggle('open', open);
+    document.body.classList.toggle('no-scroll', open);
+  };
+  document.getElementById('menuOpen').onclick = () => toggle(true);
+  document.getElementById('menuClose').onclick = () => toggle(false);
+  overlay.onclick = () => toggle(false);
+  drawer.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => toggle(false)));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  initDrawer();
   renderSurgeryTabs();
   renderSurgeries();
   renderTests();

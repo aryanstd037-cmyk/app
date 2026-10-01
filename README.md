@@ -1,8 +1,12 @@
-# Click Your Hospital — Home Page (Desktop UI)
+# Click Your Hospital — Home Page UI
 
 Static desktop home page design for **Click Your Hospital** — *Care Aisi Family Jaisi*.
 
 Open `index.html` in a browser (no build step needed).
+
+Responsive: desktop (>1100px), tablet (≤1100px) and phone (≤768px, tested at 360/390px).
+On phones the page gets a hamburger drawer menu, swipeable card rows, an app-style
+services icon grid, a vertical journey timeline and a sticky bottom bar (Call / WhatsApp / Free Consultation).
 
 ## Structure
 

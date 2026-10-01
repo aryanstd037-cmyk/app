@@ -32,6 +32,7 @@
 <!-- ================= HEADER (matches provided navbar) ================= -->
 <header class="header" id="header">
   <div class="container">
+    <button class="menu-btn" id="menuOpen" aria-label="Open menu"><svg class="i"><use href="#i-menu"/></svg></button>
     <a href="#" class="logo" aria-label="Click Your Hospital home">
       <span class="logo-word"><span class="c">click</span><svg class="i steth"><use href="#i-stethoscope"/></svg><span class="h">ur hospital</span><sup>TM</sup></span>
       <span class="logo-tag">CARE AISI FAMILY JAISI</span>
@@ -50,7 +51,7 @@
       <a href="#partner" class="free-listing"><span class="badge-biz">BUSINESS</span><svg class="i"><use href="#i-store"/></svg> Free Listing</a>
       <a href="tel:+919999999999" class="btn btn-primary btn-sm"><svg class="i i-sm"><use href="#i-phone"/></svg> Call Us</a>
       <button class="icon-btn" aria-label="Notifications"><svg class="i"><use href="#i-bell"/></svg><span class="dot"></span></button>
-      <a href="#" class="login-btn"><span class="avatar"><svg class="i"><use href="#i-user"/></svg></span> Login</a>
+      <a href="#" class="login-btn"><span class="avatar"><svg class="i"><use href="#i-user"/></svg></span> <span class="login-text">Login</span></a>
     </div>
   </div>
 </header>
@@ -740,6 +741,42 @@
   <button class="fab to-top" id="toTop" aria-label="Back to top"><svg class="i" style="transform:rotate(-90deg)"><use href="#i-arrow-right"/></svg></button>
   <a href="#" class="fab wa" aria-label="WhatsApp"><svg class="i"><use href="#i-whatsapp"/></svg><span class="tip">Chat on WhatsApp</span></a>
   <a href="tel:+919999999999" class="fab call" aria-label="Call"><svg class="i"><use href="#i-phone"/></svg><span class="tip">Free consultation</span></a>
+</div>
+
+<!-- Mobile drawer menu -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer" aria-label="Menu">
+  <div class="drawer-head">
+    <span class="logo">
+      <span class="logo-word"><span class="c">click</span><svg class="i steth"><use href="#i-stethoscope"/></svg><span class="h">ur hospital</span></span>
+      <span class="logo-tag">CARE AISI FAMILY JAISI</span>
+    </span>
+    <button class="icon-btn" id="menuClose" aria-label="Close menu"><svg class="i"><use href="#i-x"/></svg></button>
+  </div>
+  <a href="#" class="drawer-login"><span class="avatar"><svg class="i"><use href="#i-user"/></svg></span><div><b>Login / Sign up</b><small>Track bookings &amp; reports</small></div><svg class="i i-sm"><use href="#i-chevron-right"/></svg></a>
+  <nav class="drawer-links">
+    <a href="#surgeries"><span class="ic t-orange"><svg class="i"><use href="#i-scissors"/></svg></span> Surgeries</a>
+    <a href="#tests"><span class="ic t-blue"><svg class="i"><use href="#i-flask"/></svg></span> Lab Tests &amp; Scans</a>
+    <a href="#services"><span class="ic t-teal"><svg class="i"><use href="#i-hospital"/></svg></span> Clinics</a>
+    <a href="#services"><span class="ic t-green"><svg class="i"><use href="#i-leaf"/></svg></span> Ayurveda</a>
+    <a href="#services"><span class="ic t-red"><svg class="i"><use href="#i-droplet"/></svg></span> Blood Bank</a>
+    <a href="#packages"><span class="ic t-purple"><svg class="i"><use href="#i-package"/></svg></span> Health Packages</a>
+    <a href="#camps"><span class="ic t-amber"><svg class="i"><use href="#i-tent"/></svg></span> Health Camps</a>
+    <a href="#insurance"><span class="ic t-blue"><svg class="i"><use href="#i-shield-check"/></svg></span> Insurance &amp; Cashless</a>
+    <a href="#faq"><span class="ic t-orange"><svg class="i"><use href="#i-message"/></svg></span> FAQs</a>
+  </nav>
+  <a href="#partner" class="drawer-biz"><svg class="i"><use href="#i-store"/></svg><div><b>Free Listing for Business</b><small>Hospitals, labs, clinics &amp; more</small></div><span class="badge-biz">NEW</span></a>
+  <div class="drawer-foot">
+    <a href="tel:108" class="btn btn-outline" style="color:var(--red)"><svg class="i"><use href="#i-ambulance"/></svg> Ambulance</a>
+    <a href="tel:+919999999999" class="btn btn-primary"><svg class="i"><use href="#i-phone"/></svg> Call Us</a>
+  </div>
+</aside>
+
+<!-- Mobile sticky action bar -->
+<div class="mobile-cta">
+  <a href="tel:+919999999999" class="mc-btn"><svg class="i"><use href="#i-phone"/></svg><span>Call</span></a>
+  <a href="#" class="mc-btn wa"><svg class="i"><use href="#i-whatsapp"/></svg><span>WhatsApp</span></a>
+  <a href="#callback" class="btn btn-primary mc-main"><svg class="i"><use href="#i-calendar-check"/></svg> Free Consultation</a>
 </div>
 
 <div class="toast" id="toast"><svg class="i"><use href="#i-check-circle"/></svg><span></span></div>
