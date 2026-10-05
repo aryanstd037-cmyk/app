@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<title>ClickYourHospital Short</title>
+<script src="gsap.min.js"></script>
+<style>
+@font-face { font-family: "Anton"; src: url("fonts/anton-latin-400-normal.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Montserrat"; src: url("fonts/montserrat-latin-600-normal.woff2") format("woff2"); font-weight: 600; }
+@font-face { font-family: "Montserrat"; src: url("fonts/montserrat-latin-800-normal.woff2") format("woff2"); font-weight: 800; }
+@font-face { font-family: "Montserrat"; src: url("fonts/montserrat-latin-900-normal.woff2") format("woff2"); font-weight: 900; }
+@font-face { font-family: "JBMono"; src: url("fonts/jetbrains-mono-latin-800-normal.woff2") format("woff2"); font-weight: 800; }
+@font-face { font-family: "DejaVuBold"; src: url("fonts/DejaVuSans-Bold.ttf") format("truetype"); font-weight: 700; }
+:root {
+  --cyan: #00e5ff; --violet: #7c3aed; --pink: #ff2e88; --red: #ff3b4f; --yellow: #ffd60a; --green: #22e58b; --blue: #2f6bff;
+}
+html, body { margin: 0; background: #000; }
+body { color: #fff; font-family: "Montserrat", sans-serif; }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden; background: #000; }
+.layer { position: absolute; inset: 0; }
+.abs { position: absolute; }
+
+/* ---------- background ---------- */
+.glow { position: absolute; border-radius: 50%; }
+#glowA  { width: 1500px; height: 1500px; left: -620px; top: -560px; background: radial-gradient(circle, rgba(255,46,99,.55) 0%, rgba(255,46,99,.18) 32%, rgba(0,0,0,0) 66%); }
+#glowB  { width: 1600px; height: 1600px; left: 160px; top: 980px; background: radial-gradient(circle, rgba(124,58,237,.62) 0%, rgba(124,58,237,.2) 34%, rgba(0,0,0,0) 66%); }
+#glowA2 { width: 1500px; height: 1500px; left: -620px; top: -560px; background: radial-gradient(circle, rgba(0,229,255,.55) 0%, rgba(0,229,255,.16) 32%, rgba(0,0,0,0) 66%); opacity: 0; }
+#glowB2 { width: 1600px; height: 1600px; left: 160px; top: 980px; background: radial-gradient(circle, rgba(47,107,255,.62) 0%, rgba(124,58,237,.22) 36%, rgba(0,0,0,0) 66%); opacity: 0; }
+#spot   { width: 1100px; height: 1100px; left: -10px; top: 120px; background: radial-gradient(circle, rgba(255,255,255,.10) 0%, rgba(140,120,255,.08) 30%, rgba(0,0,0,0) 62%); }
+#grid { position: absolute; inset: -120px; opacity: .13;
+  background-image: linear-gradient(rgba(255,255,255,.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.5) 1px, transparent 1px);
+  background-size: 90px 90px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 55% at 50% 45%, #000 0%, transparent 75%); mask-image: radial-gradient(ellipse 70% 55% at 50% 45%, #000 0%, transparent 75%); }
+#ringWrap { position: absolute; left: 90px; top: 190px; width: 900px; height: 900px; }
+#ringWrap svg { width: 100%; height: 100%; display: block; }
+.particle { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: #fff; }
+
+/* ---------- back text (behind person) ---------- */
+.back { position: absolute; left: 0; right: 0; top: 165px; text-align: center; opacity: 0; }
+.back .small { font-family: "Montserrat"; font-weight: 900; font-size: 64px; letter-spacing: 14px; color: rgba(255,255,255,.85); display: block; }
+.back .big { display: block; font-family: "Anton"; line-height: .95; letter-spacing: 4px; text-transform: uppercase; }
+.fillA { background: linear-gradient(180deg, #ffffff 0%, #ffb3c7 45%, #ff2e63 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.fillB { background: linear-gradient(180deg, #ffffff 0%, #9df3ff 45%, #00b8ff 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.fillC { background: linear-gradient(90deg, #00e5ff 0%, #7c3aed 50%, #ff2e88 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.fillY { background: linear-gradient(180deg, #fff6c2 0%, #ffd60a 55%, #ff9f0a 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.outline { color: transparent; -webkit-text-stroke: 3px rgba(255,255,255,.35); }
+.line { display: block; position: relative; }
+.line .ghost { position: absolute; left: 0; right: 0; top: 0; }
+
+/* ---------- person ---------- */
+#personWrap { position: absolute; inset: 0; transform-origin: 50% 38%; }
+#personMask { position: absolute; inset: 0; -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 66%, transparent 94%), linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%); -webkit-mask-composite: source-in; mask-image: linear-gradient(180deg, #000 0%, #000 66%, transparent 94%), linear-gradient(90deg, transparent 0%, #000 7%, #000 93%, transparent 100%); mask-composite: intersect; }
+#person { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; object-fit: cover;
+  filter: contrast(1.07) saturate(1.12) brightness(1.04) drop-shadow(0 0 3px rgba(255,255,255,.28)) drop-shadow(0 0 38px rgba(124,58,237,.55)); }
+#bottomFade { position: absolute; left: 0; right: 0; bottom: 0; height: 520px; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.55) 45%, rgba(0,0,0,.92) 100%); }
+#sideVig { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 60% at 50% 45%, rgba(0,0,0,0) 60%, rgba(0,0,0,.55) 100%); }
+
+/* ---------- cards ---------- */
+.card { position: absolute; border-radius: 34px; padding: 26px 30px; background: rgba(14,14,22,.72);
+  border: 2px solid rgba(255,255,255,.14); box-shadow: 0 20px 60px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.12); opacity: 0; }
+.card.grad { border: none; }
+.card.grad::before { content: ""; position: absolute; inset: 0; border-radius: 34px; padding: 3px;
+  background: linear-gradient(120deg, var(--cyan), var(--violet), var(--pink));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+.label { font-family: "Montserrat"; font-weight: 900; font-size: 38px; letter-spacing: 2px; text-transform: uppercase; text-align: center; }
+.sub { font-family: "Montserrat"; font-weight: 600; font-size: 28px; color: rgba(255,255,255,.75); text-align: center; }
+
+#kyun { position: absolute; left: 0; right: 0; top: 760px; text-align: center; font-family: "Anton"; font-size: 300px; color: var(--yellow);
+  text-shadow: 0 0 40px rgba(255,214,10,.6), 8px 8px 0 #ff2e63; opacity: 0; }
+
+/* browser */
+#browser { left: 70px; top: 1085px; width: 880px; padding: 22px 26px 30px; }
+.dots { display: flex; gap: 12px; margin-bottom: 18px; }
+.dots i { width: 18px; height: 18px; border-radius: 50%; display: block; }
+.urlbar { display: flex; align-items: center; gap: 16px; background: rgba(255,255,255,.08); border-radius: 22px; padding: 18px 22px; }
+.urltext { font-family: "JBMono"; font-weight: 800; font-size: 42px; letter-spacing: -1px; white-space: nowrap; }
+.urltext .ch { opacity: 0; }
+.caret { display: inline-block; width: 5px; height: 46px; background: var(--cyan); vertical-align: middle; margin-left: 2px; }
+.gobtn { margin: 22px auto 0; width: 420px; height: 92px; border-radius: 46px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(90deg, var(--cyan), var(--violet)); font-family: "Montserrat"; font-weight: 900; font-size: 38px; letter-spacing: 3px; }
+#cursor { position: absolute; left: 0; top: 0; width: 84px; height: 84px; opacity: 0; }
+
+/* checklist */
+#check { left: 70px; top: 1100px; width: 880px; padding: 32px 36px; }
+.row { display: flex; align-items: center; gap: 26px; margin: 12px 0; opacity: 0; }
+.tick { width: 86px; height: 86px; border-radius: 50%; background: linear-gradient(135deg, #22e58b, #00b8ff); display: flex; align-items: center; justify-content: center; flex: none; }
+.rowtext { font-family: "Montserrat"; font-weight: 900; font-size: 46px; line-height: 1.1; text-transform: uppercase; }
+.rowtext em { font-style: normal; color: var(--yellow); }
+
+/* phone */
+#phone { left: 70px; top: 1060px; width: 880px; padding: 22px 30px 28px; text-align: center; }
+.callhead { font-family: "Montserrat"; font-weight: 900; font-size: 34px; letter-spacing: 8px; color: var(--cyan); }
+.num { font-family: "JBMono"; font-weight: 800; font-size: 84px; letter-spacing: 1px; white-space: nowrap; }
+.numrow { display: flex; align-items: center; justify-content: center; gap: 22px; margin-top: 6px; }
+.num .d { display: inline-block; opacity: 0; }
+.callbtn { margin: 16px auto 0; width: 540px; height: 100px; border-radius: 55px; display: flex; align-items: center; justify-content: center; gap: 20px;
+  background: linear-gradient(90deg, #22e58b, #00c2ff); color: #001018; font-family: "Montserrat"; font-weight: 900; font-size: 46px; letter-spacing: 3px; opacity: 0;
+  box-shadow: 0 0 50px rgba(34,229,139,.55); }
+#ringIcon { width: 104px; height: 104px; display: block; flex: none; }
+
+/* chip */
+#chip { position: absolute; left: 50%; top: 40px; width: 640px; margin-left: -320px; height: 76px; border-radius: 38px; display: flex; align-items: center; justify-content: center; gap: 14px;
+  background: rgba(10,10,18,.7); border: 2px solid rgba(0,229,255,.55); font-family: "Montserrat"; font-weight: 800; font-size: 32px; opacity: 0; }
+
+/* captions */
+#caps { position: absolute; left: 30px; right: 30px; top: 1395px; height: 220px; }
+.cg { position: absolute; left: 0; right: 0; top: 0; text-align: center; opacity: 0; }
+.w { display: inline-block; margin: 0 24px 0 0; font-family: "Montserrat"; font-weight: 900; font-size: 82px; line-height: 1.12; text-transform: uppercase; color: #fff;
+  -webkit-text-stroke: 12px #000; paint-order: stroke fill; text-shadow: 0 8px 22px rgba(0,0,0,.65); }
+.w.k-red { color: #ff4d6d; } .w.k-cyan { color: #3ff0ff; } .w.k-yellow { color: var(--yellow); } .w.k-green { color: #3dff9e; }
+
+/* fx */
+#flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+#redPulse { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(255,0,40,0) 55%, rgba(255,0,40,.38) 100%); opacity: 0; }
+.leak { position: absolute; top: -400px; left: -900px; width: 700px; height: 2800px; transform: rotate(18deg);
+  background: linear-gradient(90deg, rgba(0,0,0,0), rgba(0,229,255,.35), rgba(255,46,136,.35), rgba(0,0,0,0)); opacity: 0; }
+#progress { position: absolute; left: 0; top: 0; height: 10px; width: 1080px; transform-origin: 0 50%; background: linear-gradient(90deg, var(--cyan), var(--violet), var(--pink)); }
+#outro { position: absolute; inset: 0; background: #000; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-width="1080" data-height="1920" data-duration="38.85" data-fps="30">
+
+  <!-- BACKGROUND -->
+  <div id="bg" class="layer">
+    <div id="glowA" class="glow"></div>
+    <div id="glowB" class="glow"></div>
+    <div id="glowA2" class="glow"></div>
+    <div id="glowB2" class="glow"></div>
+    <div id="spot" class="glow"></div>
+    <div id="grid"></div>
+    <div id="ringWrap" data-layout-allow-overflow>
+      <svg viewBox="0 0 900 900">
+        <defs>
+          <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#00e5ff"/><stop offset=".5" stop-color="#7c3aed"/><stop offset="1" stop-color="#ff2e88"/>
+          </linearGradient>
+        </defs>
+        <g id="ring1"><circle cx="450" cy="450" r="400" fill="none" stroke="url(#rg)" stroke-width="4" stroke-dasharray="40 26" opacity=".55"/></g>
+        <g id="ring2"><circle cx="450" cy="450" r="330" fill="none" stroke="url(#rg)" stroke-width="2" stroke-dasharray="4 14" opacity=".6"/></g>
+        <g id="ring3"><circle cx="450" cy="450" r="440" fill="none" stroke="#ffffff" stroke-width="1.5" opacity=".18"/></g>
+      </svg>
+    </div>
+    <div id="particles" class="layer"></div>
+  </div>
+
+  <!-- BACK TEXT (behind the person) -->
+  <div id="backLayer" class="layer">
+    <div class="back" data-layout-allow-occlusion data-layout-allow-overlap data-layout-allow-overflow id="b1"><span class="small">RAAT KO</span><span class="big line fillA" style="font-size:330px">12 BAJE</span></div>
+    <div class="back" data-layout-allow-occlusion data-layout-allow-overlap data-layout-allow-overflow id="b2"><span class="small">PROBLEM</span><span class="big line fillA" style="font-size:170px">KIDNEY STONE</span></div>
+    <div class="back" data-layout-allow-occlusion data-layout-allow-overlap data-layout-allow-overflow id="b3"><span class="small">SURGERY</span><span class="big line fillA" style="font-size:225px">DIN PE DIN</span></div>
+    <div class="back" data-layout-allow-occlusion data-layout-allow-overlap data-layout-allow-overflow id="b4"><span class="small">KYUNKI</span><span class="big line fillA" style="font-size:158px">AARTHIK TANGI</span></div>
+    <div class="back" data-layout-allow-occlusion data-layout-allow-overlap data-layout-allow-overflow id="b5"><span class="small">AAJ HAI</span><span class="big line fillB" style="font-size:270px">SOLUTION</span></div>
+    <div class="back" data-layout-allow-occlusion data-layout-allow-overlap data-layout-allow-overflow id="b6"><span class="small">CLICK YOUR</span><span class="big line fillC" style="font-size:280px">HOSPITAL</span></div>
+    <div class="back" data-layout-allow-occlusion data-layout-allow-overlap data-layout-allow-overflow id="b7"><span class="small">SURGERY</span><span class="big line fillB" style="font-size:280px">USI DIN</span></div>
+    <div class="back" data-layout-allow-occlusion data-layout-allow-overlap data-layout-allow-overflow id="b8"><span class="small">ABHI KI ABHI</span><span class="big line fillY" style="font-size:225px">CALL NOW</span></div>
+  </div>
+
+  <!-- PERSON -->
+  <div id="personWrap">
+    <div id="personMask">
+    <video id="person" class="clip" src="person.webm" muted playsinline data-start="0" data-duration="38.85" data-track-index="1"></video>
+    </div>
+  </div>
+  <div id="sideVig"></div>
+  <div id="bottomFade"></div>
+
+  <!-- FRONT GRAPHICS -->
+  <div id="front" class="layer">
+    <!-- clock -->
+    <div class="card" id="cClock" style="left:40px; top:1060px; width:250px;">
+      <svg viewBox="0 0 200 200" style="width:190px;height:190px;display:block;margin:0 auto;">
+        <circle cx="100" cy="100" r="88" fill="rgba(255,255,255,.06)" stroke="#ff4d6d" stroke-width="8"/>
+        <g stroke="#fff" stroke-width="6" stroke-linecap="round">
+          <line x1="100" y1="22" x2="100" y2="36"/><line x1="178" y1="100" x2="164" y2="100"/><line x1="100" y1="178" x2="100" y2="164"/><line x1="22" y1="100" x2="36" y2="100"/>
+        </g>
+        <g id="hourHand" style="transform-origin:100px 100px"><line x1="100" y1="100" x2="100" y2="55" stroke="#fff" stroke-width="10" stroke-linecap="round"/></g>
+        <g id="minHand" style="transform-origin:100px 100px"><line x1="100" y1="100" x2="100" y2="34" stroke="#ff4d6d" stroke-width="6" stroke-linecap="round"/></g>
+        <circle cx="100" cy="100" r="9" fill="#fff"/>
+      </svg>
+      <div class="label" style="margin-top:10px">12:00 AM</div>
+    </div>
+
+    <!-- kidney -->
+    <div class="card" id="cKidney" style="right:40px; top:1040px; width:280px;">
+      <svg viewBox="0 0 200 200" style="width:200px;height:200px;display:block;margin:0 auto;">
+        <defs><linearGradient id="kg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff7a93"/><stop offset="1" stop-color="#b3123a"/></linearGradient></defs>
+        <path d="M118 22c-38-10-84 18-90 70-6 52 26 92 70 90 30-2 34-26 22-44-10-15-12-30 2-40 18-12 36-10 40-36 4-22-14-36-44-40z" fill="url(#kg)"/>
+        <path d="M96 96 C120 90 140 96 160 104" stroke="#ffd0da" stroke-width="7" fill="none" stroke-linecap="round" opacity=".7"/>
+        <g id="stones"><circle cx="70" cy="80" r="11" fill="#ffd60a"/><circle cx="62" cy="120" r="8" fill="#ffd60a"/><circle cx="88" cy="140" r="7" fill="#ffd60a"/></g>
+      </svg>
+      <div class="label" style="color:#ff6b86">KIDNEY STONE</div>
+    </div>
+
+    <!-- calendar -->
+    <div class="card" id="cCal" style="left:40px; top:1040px; width:270px; padding:0; overflow:hidden;">
+      <div style="height:64px;background:linear-gradient(90deg,#ff2e63,#ff6a3d);display:flex;align-items:center;justify-content:center" class="label">SURGERY</div>
+      <div style="position:relative;height:200px;">
+        <div class="calday abs" id="d1" style="inset:0;display:flex;align-items:center;justify-content:center;font-family:Anton;font-size:120px;">MON</div>
+        <div class="calday abs" id="d2" style="inset:0;display:flex;align-items:center;justify-content:center;font-family:Anton;font-size:120px;opacity:0">TUE</div>
+        <div class="calday abs" id="d3" style="inset:0;display:flex;align-items:center;justify-content:center;font-family:Anton;font-size:120px;opacity:0">WED</div>
+        <svg id="xmark" viewBox="0 0 200 200" class="abs" style="left:35px;top:0;width:200px;height:200px;opacity:0">
+          <path d="M40 40 L160 160 M160 40 L40 160" stroke="#ff2e4f" stroke-width="18" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="sub" style="padding:0 0 18px">Postponed...</div>
+    </div>
+
+    <!-- money crunch -->
+    <div class="card" id="cMoney" style="right:40px; top:1050px; width:260px;">
+      <svg viewBox="0 0 200 200" style="width:180px;height:180px;display:block;margin:0 auto;">
+        <circle cx="100" cy="100" r="84" fill="#ffd60a" stroke="#ff9f0a" stroke-width="10"/>
+        <text x="100" y="138" text-anchor="middle" font-family="DejaVuBold" font-size="110" fill="#7a4a00">&#8377;</text>
+        <path id="crack" d="M96 14 L112 60 L88 92 L116 128 L94 186" stroke="#1a0b00" stroke-width="7" fill="none" stroke-linejoin="round"/>
+      </svg>
+      <div class="label" style="color:#ff4d6d">PAISA KAM?</div>
+    </div>
+
+    <!-- solution badge -->
+    <div class="card grad" id="cSol" style="right:40px; top:1050px; width:260px;">
+      <svg viewBox="0 0 200 200" style="width:180px;height:180px;display:block;margin:0 auto;">
+        <g id="rays" style="transform-origin:100px 100px" stroke="#3ff0ff" stroke-width="6" stroke-linecap="round" opacity=".8">
+          <line x1="100" y1="6" x2="100" y2="26"/><line x1="100" y1="174" x2="100" y2="194"/><line x1="6" y1="100" x2="26" y2="100"/><line x1="174" y1="100" x2="194" y2="100"/>
+          <line x1="34" y1="34" x2="48" y2="48"/><line x1="152" y1="152" x2="166" y2="166"/><line x1="166" y1="34" x2="152" y2="48"/><line x1="48" y1="152" x2="34" y2="166"/>
+        </g>
+        <circle cx="100" cy="100" r="58" fill="url(#rg)"/>
+        <path d="M74 102 L94 122 L130 82" stroke="#fff" stroke-width="13" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="label" style="color:#3ff0ff">SOLUTION</div>
+    </div>
+
+    <!-- browser -->
+    <div class="card grad" id="browser">
+      <div class="dots"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i></div>
+      <div class="urlbar">
+        <svg viewBox="0 0 24 24" style="width:40px;height:40px;flex:none"><path d="M7 10V7a5 5 0 0 1 10 0v3" stroke="#22e58b" stroke-width="2.4" fill="none"/><rect x="4" y="10" width="16" height="11" rx="2.5" fill="#22e58b"/></svg>
+        <div class="urltext" id="urltext"></div><span class="caret" id="caret"></span>
+      </div>
+      <div class="gobtn" id="gobtn">VISIT NOW</div>
+    </div>
+    <svg id="cursor" viewBox="0 0 24 24"><path d="M4 2 L4 20 L9 15 L12.5 22 L15.5 20.6 L12 13.8 L19 13.8 Z" fill="#fff" stroke="#000" stroke-width="1.4" stroke-linejoin="round"/></svg>
+
+    <!-- checklist -->
+    <div class="card grad" id="check">
+      <div class="row" id="r1"><div class="tick"><svg viewBox="0 0 40 40" style="width:52px;height:52px"><path d="M9 21 L17 29 L31 12" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="rowtext">Aarthik tangi se <em>bahar</em></div></div>
+      <div class="row" id="r2"><div class="tick"><svg viewBox="0 0 40 40" style="width:52px;height:52px"><path d="M9 21 L17 29 L31 12" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="rowtext">Surgery <em>usi din</em></div></div>
+    </div>
+
+    <!-- phone -->
+    <div class="card grad" id="phone">
+      <div class="callhead">CALL KAREIN</div>
+      <div class="numrow"><svg id="ringIcon" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="56" fill="url(#rg)"/>
+        <g id="handset" style="transform-origin:60px 60px">
+          <path d="M42 34c3-3 7-3 9 0l6 9c2 3 1 6-1 8l-4 3c3 7 9 13 16 16l3-4c2-2 5-3 8-1l9 6c3 2 3 6 0 9l-5 5c-4 4-11 4-18 0C49 77 43 71 36 58c-4-7-4-14 0-18z" fill="#fff"/>
+        </g>
+        <path id="wave1" d="M78 30 a22 22 0 0 1 14 14" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity="0"/>
+        <path id="wave2" d="M80 18 a34 34 0 0 1 24 24" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity="0"/>
+      </svg><div class="num" id="num"></div></div>
+      <div class="callbtn" id="callbtn">
+        <svg viewBox="0 0 120 120" style="width:56px;height:56px"><path d="M42 34c3-3 7-3 9 0l6 9c2 3 1 6-1 8l-4 3c3 7 9 13 16 16l3-4c2-2 5-3 8-1l9 6c3 2 3 6 0 9l-5 5c-4 4-11 4-18 0C49 77 43 71 36 58c-4-7-4-14 0-18z" fill="#001018"/></svg>
+        CALL NOW
+      </div>
+    </div>
+
+    <div id="chip">
+      <svg viewBox="0 0 24 24" style="width:40px;height:40px"><rect x="2" y="2" width="20" height="20" rx="6" fill="#ff2e4f"/><path d="M12 6v12M6 12h12" stroke="#fff" stroke-width="3.4" stroke-linecap="round"/></svg>
+      ClickYourHospital.com
+    </div>
+
+    <div id="kyun">KYUN?</div>
+    <div id="caps"></div>
+  </div>
+
+  <!-- FX -->
+  <div id="redPulse"></div>
+  <div class="leak" id="leak"></div>
+  <div id="flash"></div>
+  <div id="progress"></div>
+  <div id="outro"></div>
+</div>
+
+<script>
+(function () {
+  const WORDS = __WORDS__;
+  const D = 38.85;
+  const tl = gsap.timeline({ paused: true });
+
+  // seeded rng
+  let s = 1337; const rnd = () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+
+  // ---------------- background motion ----------------
+  tl.fromTo("#glowA,#glowA2", { x: 0, y: 0 }, { x: 140, y: 90, duration: D / 2, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0);
+  tl.fromTo("#glowB,#glowB2", { x: 0, y: 0 }, { x: -160, y: -120, duration: D / 2, ease: "sine.inOut", yoyo: true, repeat: 1 }, 0);
+  tl.fromTo("#grid", { y: 0 }, { y: 90, duration: D, ease: "none" }, 0);
+  tl.fromTo("#ring1", { rotation: 0, svgOrigin: "450 450" }, { rotation: 90, svgOrigin: "450 450", duration: D, ease: "none" }, 0);
+  tl.fromTo("#ring2", { rotation: 0, svgOrigin: "450 450" }, { rotation: -140, svgOrigin: "450 450", duration: D, ease: "none" }, 0);
+  tl.fromTo("#ringWrap", { scale: .6, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.2, ease: "expo.out" }, 0.05);
+  // beat pulses on ring after drop (120bpm)
+  for (let t = 16.64; t < 38.4; t += 0.5) tl.fromTo("#ring3", { scale: 1.04, opacity: .45, transformOrigin: "50% 50%" }, { scale: 1, opacity: .18, duration: .45, ease: "power2.out", immediateRender: false }, t);
+  // palette swap: tension -> hope
+  tl.to("#glowA,#glowB", { opacity: 0, duration: .6, ease: "power2.inOut" }, 16.45);
+  tl.to("#glowA2,#glowB2", { opacity: 1, duration: .6, ease: "power2.inOut" }, 16.45);
+  // particles
+  const pl = document.getElementById("particles");
+  for (let i = 0; i < 46; i++) {
+    const p = document.createElement("div"); p.className = "particle";
+    const sz = 3 + rnd() * 7; p.style.width = p.style.height = sz + "px";
+    p.style.left = (rnd() * 1080) + "px"; p.style.top = (rnd() * 1920) + "px";
+    p.style.background = ["#00e5ff", "#ff2e88", "#ffffff", "#7c3aed"][i % 4];
+    pl.appendChild(p);
+    const op = .15 + rnd() * .5;
+    tl.fromTo(p, { y: 0, opacity: 0 }, { y: -(260 + rnd() * 520), opacity: op, duration: D, ease: "none" }, 0);
+  }
+
+  // ---------------- person moves (punch-ins / shake) ----------------
+  const P = "#personWrap";
+  tl.fromTo(P, { scale: 1.16, y: 120, opacity: 0 }, { scale: 1.0, y: 60, opacity: 1, duration: 1.0, ease: "expo.out" }, 0);
+  const zoom = (t, sc, d = .35, ease = "power3.out") => tl.to(P, { scale: sc, duration: d, ease }, t);
+  zoom(4.15, 1.07, .25); zoom(6.3, 1.0, .4);
+  zoom(8.1, 1.05, .5); zoom(10.7, 1.0, .35);
+  zoom(14.12, 1.15, .14, "power4.out"); zoom(14.7, 1.04, .5);
+  zoom(16.5, 1.0, .5);
+  tl.to(P, { scale: .86, y: -50, duration: .6, ease: "power3.inOut" }, 19.7);
+  zoom(23.2, .84, .5); zoom(29.9, .87, .6); zoom(35.0, .84, .3); tl.to(P, { scale: .9, duration: 3.4, ease: "sine.inOut" }, 35.3);
+  const shake = (t, amp = 14, n = 8) => { for (let i = 0; i < n; i++) tl.to(P, { x: (i % 2 ? -1 : 1) * amp * (1 - i / n), duration: .035, ease: "none" }, t + i * .035); tl.to(P, { x: 0, duration: .05 }, t + n * .035); };
+  shake(4.22, 10); shake(14.18, 22, 10); shake(16.64, 12);
+
+  // ---------------- back text ----------------
+  const back = (id, tIn, tOut, style = "rise") => {
+    const el = "#" + id, lines = el + " .big, " + el + " .small";
+    tl.set(el, { opacity: 1 }, tIn);
+    if (style === "slam") tl.fromTo(lines, { scale: 1.6, opacity: 0 }, { scale: 1, opacity: 1, duration: .45, ease: "back.out(2)", stagger: .07 }, tIn);
+    else tl.fromTo(lines, { y: 140, opacity: 0 }, { y: 0, opacity: 1, duration: .6, ease: "expo.out", stagger: .08 }, tIn);
+    tl.to(el, { scale: 1.06, duration: tOut - tIn, ease: "none", transformOrigin: "50% 40%" }, tIn);
+    tl.to(lines, { y: -90, opacity: 0, duration: .3, ease: "power2.in", stagger: .04 }, tOut - .3);
+    tl.set(el, { opacity: 0, scale: 1 }, tOut);
+  };
+  back("b1", 0.85, 6.3); back("b2", 6.4, 10.7); back("b3", 10.8, 14.1);
+  back("b4", 14.6, 16.55, "slam"); back("b5", 16.64, 20.0, "slam"); back("b6", 20.05, 23.25);
+  back("b7", 23.3, 28.65); back("b8", 28.7, 38.4, "slam");
+  // glitch jitter on AARTHIK TANGI
+  for (let i = 0; i < 14; i++) {
+    const t = 15.62 + i * .06;
+    tl.set("#b4", { x: (rnd() - .5) * 40, skewX: (rnd() - .5) * 18 }, t);
+  }
+  tl.set("#b4", { x: 0, skewX: 0 }, 16.5);
+
+  // ---------------- cards ----------------
+  const popIn = (el, t, from = { y: 60, scale: .7 }) => tl.fromTo(el, { opacity: 0, ...from }, { opacity: 1, y: 0, x: 0, scale: 1, duration: .5, ease: "back.out(1.8)" }, t);
+  const popOut = (el, t) => tl.to(el, { opacity: 0, scale: .8, y: -30, duration: .28, ease: "power2.in" }, t);
+
+  // clock
+  popIn("#cClock", 1.0, { x: -120, scale: .8 });
+  tl.fromTo("#minHand", { rotation: -270 }, { rotation: 0, duration: 1.4, ease: "power2.inOut" }, 1.0);
+  tl.fromTo("#hourHand", { rotation: -60 }, { rotation: 0, duration: 1.4, ease: "power2.inOut" }, 1.0);
+  tl.fromTo("#cClock", { boxShadow: "0 0 0 rgba(255,77,109,0)" }, { boxShadow: "0 0 70px rgba(255,77,109,.8)", duration: .25, yoyo: true, repeat: 3 }, 2.44);
+  popOut("#cClock", 6.0);
+  // pain pulse
+  tl.fromTo("#redPulse", { opacity: 0 }, { opacity: 1, duration: .12, yoyo: true, repeat: 1 }, 4.22);
+  tl.fromTo("#redPulse", { opacity: 0 }, { opacity: .7, duration: .12, yoyo: true, repeat: 1, immediateRender: false }, 4.5);
+  // kidney
+  popIn("#cKidney", 8.1, { x: 120, scale: .8 });
+  tl.fromTo("#stones circle", { scale: 0, transformOrigin: "50% 50%" }, { scale: 1, duration: .4, ease: "back.out(3)", stagger: .12 }, 8.35);
+  tl.to("#cKidney", { rotation: 2, duration: .12, yoyo: true, repeat: 7, ease: "sine.inOut" }, 9.7);
+  popOut("#cKidney", 10.6);
+  // calendar
+  popIn("#cCal", 11.5, { x: -120, scale: .8 });
+  const flips = [["#d1", "#d2", 12.36], ["#d2", "#d3", 12.9]];
+  flips.forEach(([a, b, t]) => { tl.to(a, { rotationX: 90, opacity: 0, duration: .16, ease: "power2.in" }, t); tl.fromTo(b, { rotationX: -90, opacity: 0 }, { rotationX: 0, opacity: 1, duration: .2, ease: "power2.out" }, t + .16); });
+  tl.fromTo("#xmark", { opacity: 0, scale: 1.8, transformOrigin: "50% 50%" }, { opacity: 1, scale: 1, duration: .22, ease: "back.out(2)" }, 13.44);
+  popOut("#cCal", 14.05);
+  // KYUN?
+  tl.fromTo("#kyun", { scale: 2.6, opacity: 0, rotation: -8 }, { scale: 1, opacity: 1, rotation: -4, duration: .22, ease: "power4.out" }, 14.16);
+  tl.to("#kyun", { scale: .6, opacity: 0, duration: .2, ease: "power2.in" }, 14.62);
+  // money
+  popIn("#cMoney", 15.0, { x: 120, scale: .8 });
+  tl.fromTo("#crack", { strokeDasharray: 260, strokeDashoffset: 260 }, { strokeDashoffset: 0, duration: .35, ease: "power2.out" }, 15.66);
+  for (let i = 0; i < 8; i++) tl.set("#cMoney", { x: (rnd() - .5) * 26 }, 15.7 + i * .06);
+  tl.set("#cMoney", { x: 0 }, 16.2);
+  popOut("#cMoney", 16.4);
+  // transition flash into solution
+  tl.fromTo("#flash", { opacity: 0 }, { opacity: .85, duration: .08 }, 16.56);
+  tl.to("#flash", { opacity: 0, duration: .45, ease: "power2.out" }, 16.64);
+  // solution badge
+  popIn("#cSol", 17.1, { x: 120, scale: .6 });
+  tl.fromTo("#rays", { rotation: 0, scale: .6 }, { rotation: 90, scale: 1, duration: 2.6, ease: "power2.out" }, 17.1);
+  popOut("#cSol", 19.75);
+
+  // browser + cursor + typing
+  const url = "clickyourhospital.com"; const ut = document.getElementById("urltext");
+  [...url].forEach((c, i) => { const sp = document.createElement("span"); sp.className = "ch"; sp.textContent = c; ut.appendChild(sp); });
+  popIn("#browser", 19.9, { y: 120, scale: .85 });
+  const chars = ut.querySelectorAll(".ch");
+  chars.forEach((c, i) => tl.set(c, { opacity: 1 }, 20.12 + i * 0.045));
+  for (let t = 20; t < 23.2; t += .5) tl.set("#caret", { opacity: (Math.round((t - 20) * 2) % 2) ? 0 : 1 }, t);
+  tl.fromTo("#cursor", { opacity: 0, x: 980, y: 1320 }, { opacity: 1, x: 620, y: 1262, duration: .55, ease: "power3.out" }, 19.55);
+  tl.to("#cursor", { scale: .8, duration: .07, yoyo: true, repeat: 1, transformOrigin: "10% 10%" }, 20.04);
+  tl.to("#gobtn", { scale: .94, duration: .07, yoyo: true, repeat: 1 }, 20.04);
+  tl.to("#cursor", { x: 560, y: 1270, duration: .5, ease: "sine.inOut" }, 21.2);
+  tl.to("#cursor", { scale: .8, duration: .07, yoyo: true, repeat: 1, transformOrigin: "10% 10%" }, 21.78);
+  tl.to("#gobtn", { scale: .94, duration: .07, yoyo: true, repeat: 1 }, 21.78);
+  tl.fromTo("#gobtn", { boxShadow: "0 0 0 rgba(0,229,255,0)" }, { boxShadow: "0 0 60px rgba(0,229,255,.9)", duration: .3, yoyo: true, repeat: 1 }, 21.8);
+  tl.to("#cursor", { opacity: 0, duration: .25 }, 22.6);
+  popOut("#browser", 23.0);
+  // persistent brand chip
+  tl.fromTo("#chip", { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: .5, ease: "back.out(2)" }, 23.1);
+
+  // checklist
+  popIn("#check", 23.3, { y: 120, scale: .85 });
+  tl.fromTo("#r1", { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: .45, ease: "back.out(2)" }, 23.9);
+  tl.fromTo("#r1 .tick", { scale: 0 }, { scale: 1, duration: .4, ease: "back.out(3)" }, 24.0);
+  tl.fromTo("#r2", { opacity: 0, x: -80 }, { opacity: 1, x: 0, duration: .45, ease: "back.out(2)" }, 26.5);
+  tl.fromTo("#r2 .tick", { scale: 0 }, { scale: 1, duration: .4, ease: "back.out(3)" }, 27.2);
+  popOut("#check", 28.45);
+
+  // phone card
+  const NUM = "80004604946"; const nm = document.getElementById("num");
+  [...NUM].forEach(c => { const sp = document.createElement("span"); sp.className = "d"; sp.textContent = c; nm.appendChild(sp); });
+  popIn("#phone", 28.7, { y: 140, scale: .8 });
+  for (let i = 0; i < 10; i++) tl.to("#handset", { rotation: (i % 2 ? -14 : 14), duration: .06, ease: "none" }, 29.0 + i * .06);
+  tl.to("#handset", { rotation: 0, duration: .08 }, 29.6);
+  tl.fromTo("#wave1,#wave2", { opacity: 0 }, { opacity: 1, duration: .15, yoyo: true, repeat: 5, stagger: .1 }, 29.0);
+  nm.querySelectorAll(".d").forEach((d, i) => tl.fromTo(d, { opacity: 0, y: 50, scale: .6 }, { opacity: 1, y: 0, scale: 1, duration: .25, ease: "back.out(2.5)" }, 29.98 + i * .17));
+  tl.fromTo("#callbtn", { opacity: 0, scale: .6 }, { opacity: 1, scale: 1, duration: .45, ease: "back.out(2)" }, 32.6);
+  for (let t = 33.2; t < 38.2; t += .5) tl.fromTo("#callbtn", { scale: 1.07 }, { scale: 1, duration: .45, ease: "power2.out", immediateRender: false }, t);
+  // end section: ring again + emphasise
+  for (let i = 0; i < 10; i++) tl.to("#handset", { rotation: (i % 2 ? -14 : 14), duration: .06, ease: "none" }, 36.0 + i * .06);
+  tl.to("#handset", { rotation: 0, duration: .08 }, 36.6);
+  tl.fromTo("#phone", { boxShadow: "0 0 0 rgba(34,229,139,0)" }, { boxShadow: "0 0 90px rgba(34,229,139,.6)", duration: .4, yoyo: true, repeat: 3, immediateRender: false }, 35.1);
+
+  // light-leak sweeps on section changes
+  [6.3, 10.75, 16.6, 19.95, 23.25, 28.65, 35.05].forEach(t => {
+    tl.fromTo("#leak", { x: 0, opacity: 0 }, { x: 2400, opacity: 1, duration: .55, ease: "power2.inOut", immediateRender: t < 7 }, t - .25);
+    tl.set("#leak", { opacity: 0 }, t + .32);
+  });
+
+  // ---------------- captions ----------------
+  const KW = {
+    "dard": "k-red", "chillane": "k-red", "12": "k-yellow", "baje": "k-yellow", "kidney": "k-red", "stone": "k-red", "problem": "k-red",
+    "surgery": "k-cyan", "din": "k-yellow", "kyun?": "k-yellow", "aarthik": "k-red", "tangi?": "k-red", "tangi": "k-red", "solution": "k-green",
+    "click": "k-cyan", "your": "k-cyan", "hospital": "k-cyan", ".com": "k-cyan", "bahar": "k-green", "usi": "k-green", "80004604946": "k-yellow",
+    "call": "k-green", "phone": "k-green", "customer": "k-cyan", "support": "k-cyan", "abhi": "k-yellow", "zaroorat": "k-yellow"
+  };
+  const caps = document.getElementById("caps");
+  // group words: break on punctuation, gap, or 3 words (brand / number stand alone)
+  for (let i = 0; i < WORDS.length; i++) {
+    if (/^click$/i.test(WORDS[i].text) && WORDS[i + 3] && /\.com$/.test(WORDS[i + 3].text)) {
+      WORDS.splice(i, 4, { text: "ClickYourHospital.com", start: WORDS[i].start, end: WORDS[i + 3].end, brand: true });
+    }
+  }
+  const groups = []; let g = [];
+  WORDS.forEach((w, i) => {
+    const prev = WORDS[i - 1];
+    const isBrand = !!w.brand;
+    const prevBrand = !!(prev && prev.brand);
+    const brk = g.length && ((prev && w.start - prev.end > 0.28) || g.length >= 3 || /[?.,]$/.test(prev.text) || isBrand !== prevBrand || /^\d{6,}$/.test(w.text) || /^\d{6,}$/.test(prev.text));
+    if (brk || (g.length && (isBrand || prevBrand))) { groups.push(g); g = []; }
+    g.push(w);
+  });
+  if (g.length) groups.push(g);
+  groups.forEach((grp, gi) => {
+    const el = document.createElement("div"); el.className = "cg";
+    const brand = grp.every(w => w.brand);
+    grp.forEach(w => {
+      const sp = document.createElement("span"); const key = w.text.toLowerCase().replace(/[!]/g, "");
+      sp.className = "w " + (KW[key] || KW[key.replace(/[?.,]$/, "")] || "");
+      sp.textContent = w.text.replace(/[.,]$/, "");
+      if (brand) { sp.textContent = w.text; sp.className = "w k-cyan"; sp.style.margin = "0"; sp.style.fontSize = "70px"; sp.style.textTransform = "none"; }
+      el.appendChild(sp); w.el = sp;
+    });
+    caps.appendChild(el);
+    const t0 = grp[0].start - 0.04;
+    const next = groups[gi + 1];
+    let t1 = Math.max(grp[grp.length - 1].end + 0.12, t0 + 0.35);
+    if (next) t1 = Math.min(t1, next[0].start - 0.04);
+    t1 = Math.min(t1, D - 0.3);
+    tl.fromTo(el, { opacity: 0, y: 40, scale: .85 }, { opacity: 1, y: 0, scale: 1, duration: .16, ease: "back.out(2.2)" }, t0);
+    tl.to(el, { opacity: 0, duration: .08, ease: "none" }, t1 - .06);
+    tl.set(el, { opacity: 0 }, t1 + .03);
+    grp.forEach(w => {
+      const base = w.el.className.includes("k-") ? null : "#ffffff";
+      tl.fromTo(w.el, { scale: 1 }, { scale: 1.08, duration: .1, ease: "power2.out" }, w.start);
+      tl.to(w.el, { scale: 1, duration: .14, ease: "power2.inOut" }, Math.min(w.end, w.start + .3));
+      if (base) { tl.set(w.el, { color: "#ffd60a" }, w.start); tl.set(w.el, { color: base }, Math.max(w.end, w.start + .1)); }
+    });
+  });
+
+  // ---------------- outro + progress ----------------
+  tl.fromTo("#progress", { scaleX: 0 }, { scaleX: 1, duration: D, ease: "none" }, 0);
+  tl.fromTo("#flash", { opacity: 0 }, { opacity: .7, duration: .06, immediateRender: false }, 38.5);
+  tl.to("#flash", { opacity: 0, duration: .2 }, 38.56);
+  tl.fromTo("#outro", { opacity: 0 }, { opacity: 1, duration: .25, ease: "power2.in" }, 38.6);
+  tl.set({}, {}, D);
+
+  window.__timelines["main"] = tl;
+})();
+</script>
+</body>
+</html>
