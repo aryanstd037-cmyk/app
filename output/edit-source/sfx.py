@@ -87,7 +87,7 @@ add(whoosh(), 23.15, 0.55, -0.3)
 add(ding(), 24.05, 0.5); add(ding(), 27.26, 0.5)        # checklist
 add(whoosh(), 28.6, 0.55, 0.3)
 add(ring(), 29.0, 0.45)                                 # phone ring
-for k in range(11): add(tick(), 29.98 + k * 0.17, 0.45)  # digits roll in
+for k in range(10): add(tick(), 29.98 + k * 0.17, 0.45)  # digits roll in
 add(pop(1300), 31.9, 0.45)
 add(pop(900), 32.7, 0.5)                                # "call"
 add(whoosh(0.6, False), 34.95, 0.6); add(impact(0.8), 35.1, 0.6)
